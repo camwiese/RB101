@@ -1,5 +1,3 @@
-## calculator
-
 Kernel.puts("Welcome to the calculator")
 Kernel.puts("What's the first number?")
 number1 = Kernel.gets().chomp()
@@ -19,5 +17,4 @@ elsif operator == '3'
 else
   result = number1.to_f() / number2.to_f()
 end
-
 Kernel.puts("The result is #{result}")
