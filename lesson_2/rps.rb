@@ -1,7 +1,7 @@
 VALID_CHOICES = ['rock', 'paper', 'scissors']
 
 def display_results(player, computer)
- if (player == 'rock' && computer == 'scissors') ||
+  if (player == 'rock' && computer == 'scissors') ||
     (player == 'paper' && computer == 'rock') ||
     (player == 'scissors' && computer == 'paper')
     prompt("You win")
@@ -26,9 +26,9 @@ test_method
 
 #main loop
 
-loop do 
+loop do
   choice = ''
-  loop do 
+  loop do
     prompt("Choose one: #{VALID_CHOICES.join(', ')}")
     choice = Kernel.gets.chomp
 
@@ -44,7 +44,6 @@ loop do
   Kernel.puts("You chose #{choice}; Computer chose #{computer_choice}")
 
   display_results(choice, computer_choice)
- 
 
   prompt("Do you want to play again?")
   answer = gets.chomp
