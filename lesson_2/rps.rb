@@ -1,30 +1,35 @@
-VALID_CHOICES = ['rock', 'paper', 'scissors']
+require 'pry'
+
+VALID_CHOICES = %w(rock paper scissors lizard spock)
+
+
+def win?(first, second)
+  # define the winning moves class here intead of using an instance variable
+  winning_moves = {
+  "rock" => ["lizard", "scissors"], 
+  "paper" => ["rock", "spock"],
+  "scissors" => ["lizard","paper"],
+  "lizard" => ["paper","spock"],
+  "spock" => ["rock", "scissors"]
+}
+  winning_moves[first].include? second
+end
 
 def display_results(player, computer)
-  if (player == 'rock' && computer == 'scissors') ||
-    (player == 'paper' && computer == 'rock') ||
-    (player == 'scissors' && computer == 'paper')
-    prompt("You win")
-  elsif (player == 'rock' && computer == 'paper') ||
-    (player == 'paper' && computer == 'scissors') ||
-    (player == 'scissors' && computer == 'rock')
+  if win?(player, computer)
+    prompt("You won!")
+  elsif win?(computer, player)
     prompt("Computer won")
   else
     prompt("It's a tie")
   end
 end
 
-def test_method
-  prompt('test message')
-end
-
 def prompt(message)
   Kernel.puts("=> #{message}")
 end
 
-test_method
-
-#main loop
+# main loop
 
 loop do
   choice = ''
