@@ -4,7 +4,7 @@ VALID_CHOICES = %w(rock paper scissors lizard spock)
 
 
 def win?(first, second)
-  # define the winning moves class here intead of using an instance variable
+  # define the winning moves class here instead of using an instance variable
   winning_moves = {
   "rock" => ["lizard", "scissors"], 
   "paper" => ["rock", "spock"],
@@ -12,7 +12,7 @@ def win?(first, second)
   "lizard" => ["paper","spock"],
   "spock" => ["rock", "scissors"]
 }
-  winning_moves[first].include? second
+  winning_moves[first].include?(second)
 end
 
 def display_results(player, computer)
