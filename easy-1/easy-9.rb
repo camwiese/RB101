@@ -1,10 +1,6 @@
 # Write a method that takes one argument, a positive integer, and returns the sum of its digits.
 
-# Examples:
-
-# puts sum(23) == 5
-# puts sum(496) == 19
-# puts sum(123_456_789) == 45
+#Note: Answer they provided used .chars instead of .split
 
 #easy mode with loop
 def sum(number)
@@ -27,15 +23,3 @@ end
 puts sum(23) == 5
 puts sum(496) == 19
 puts sum(123_456_789) == 45
-
-
-def sum(number)
-  sum = 0
-  str_digits = number.to_s.chars
-
-  str_digits.each do |str_digit|
-    sum += str_digit.to_i
-  end
-
-  sum
-end

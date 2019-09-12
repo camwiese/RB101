@@ -1,5 +1,3 @@
-require 'pry'
-
 VALID_CHOICES = %w(rock paper scissors lizard spock)
 
 def shortcut(input)
@@ -57,7 +55,7 @@ loop do
       choice = shortcut(choice)
       break
     else
-      prompt("please enter a valid input")
+      prompt("Please enter a valid input")
     end
   end
 
