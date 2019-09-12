@@ -1,9 +1,20 @@
 # Easy 2 — Exercise 2
 # How big is the room
 
-puts "Please enter the length of the room in meters:"
+CT_TO_SQ_FT = 929.03
+
+puts "Please enter length in feet"
 length = gets.chomp.to_i
-puts "Please enter the width of the room in meters:"
+
+puts "Please enter width in feet"
 width = gets.chomp.to_i
 
-puts "The area of the room is #{length * width} square meters (#{length * width * 10.7639} sq feet!)"
+p sq_ft = length * width
+p sq_inches = (length * 12) * (width * 12)
+p sq_cent = sq_ft * CT_TO_SQ_FT
+
+puts "Square feet: #{sq_ft}"
+puts "Square inches: #{sq_inches}"
+puts "Square centimeters: #{sq_cent}"
+
+
