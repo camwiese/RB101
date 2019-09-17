@@ -1,4 +1,11 @@
 VALID_CHOICES = %w(rock paper scissors lizard spock)
+WINNING_MOVES = {
+  "rock" => ["lizard", "scissors"],
+  "paper" => ["rock", "spock"],
+  "scissors" => ["lizard", "paper"],
+  "lizard" => ["paper", "spock"],
+  "spock" => ["rock", "scissors"]
+}
 
 def shortcut(input)
   shortcut_choices = {
@@ -12,14 +19,7 @@ def shortcut(input)
 end
 
 def win?(first, second)
-  winning_moves = {
-    "rock" => ["lizard", "scissors"],
-    "paper" => ["rock", "spock"],
-    "scissors" => ["lizard", "paper"],
-    "lizard" => ["paper", "spock"],
-    "spock" => ["rock", "scissors"]
-  }
-  winning_moves[first].include?(second)
+  WINNING_MOVES[first].include?(second)
 end
 
 def return_results(player, computer)
@@ -36,18 +36,29 @@ def prompt(message)
   Kernel.puts("=> #{message}")
 end
 
-# Set score
+# Welcome Message
+prompt("Welcome to Rock, Paper, Sicssors, Lizard, Spock")
+prompt("Today, we're playing the best of 5 rounds")
+prompt("Good luck!")
+
 player_score = 0
 computer_score = 0
 
 # Game Loop
 loop do
   choice = ''
+  # Set score
+
+  prompt("Score:")
+  prompt("Computer: #{computer_score}")
+  prompt("Player: #{player_score}")
+  prompt("---------------------")
+
 
   # Grab & validate User Input
   loop do
     prompt("Choose one: #{VALID_CHOICES.join(', ')}")
-    choice = Kernel.gets.chomp
+    choice = Kernel.gets.chomp.downcase
 
     if VALID_CHOICES.include?(choice)
       break
@@ -75,19 +86,17 @@ loop do
     prompt("It's a tie!")
   end
 
-  prompt("Score:")
-  prompt("Computer: #{computer_score}")
-  prompt("Player: #{player_score}")
-  prompt("---------------------")
+  sleep 1
+  system("clear")
 
   if computer_score >= 5 || player_score >= 5
     prompt("That's game!")
     prompt("Do you want to play again?")
     answer = gets.chomp
-    break unless answer.downcase.start_with?('y')
+    break unless answer.downcase == ('y' || 'yes')
     # Reset the counter if the user wants to play again.
-    computer_score = 0
     player_score = 0
+    computer_score = 0
   end
 end
 
