@@ -1,11 +1,7 @@
-countries_and_capitals = {
-  'France' => 'Paris',
-  'Belgium' => 'Brussels',
-  'Morocco' => 'Rabat',
-  'Barbados' => 'Bridgetown',
-  'Peru' => 'Lima',
-  'Bolivia' => 'La Paz',
-  'Brazil' => 'Brasilia'
-}
+arr = ['10', '11', '9', '7', '8']
 
-p countries_and_capitals["Bolivia"].chr
+# p arr.sort_by {|num| num.to_i}
+
+arr.sort! do |a,b|
+  b.to_i <=> a.to_i
+end
