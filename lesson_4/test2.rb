@@ -1,7 +1,8 @@
-arr = ['10', '11', '9', '7', '8']
+a = 5
 
-# p arr.sort_by {|num| num.to_i}
-
-arr.sort! do |a,b|
-  b.to_i <=> a.to_i
+loop do
+  a = 7
+  break
 end
+
+p a
