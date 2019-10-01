@@ -1,6 +1,9 @@
 require 'pry'
 
-# Name => [value, count]
+PLAYING_TO_NUMBER = 21
+DEALER_HITS = 17
+WINNING_SCORE = 5
+
 CARD_VALUES = {
   "1" => [1],
   "2" => [2],
@@ -15,7 +18,7 @@ CARD_VALUES = {
   "Jack" => [10],
   "Queen" => [10],
   "King" => [10],
-  "Ace" => [[1,11]]
+  "Ace" => [11]
 }
 
 def prompt(msg)
@@ -24,7 +27,12 @@ end
 
 # Supporting Methods
 def bust?(hand_value)
-  hand_value > 21
+  hand_value > PLAYING_TO_NUMBER
+end
+
+def display_hand(hand, show_full=true)
+  return "#{hand[0]} and Unknown" unless show_full
+  joinor(hand)
 end
 
 # Initialize Deck
@@ -36,15 +44,8 @@ def initialize_deck
   cards
 end
 
-deck = initialize_deck
-
 # Deal cards to player and dealer
-def deal_cards(dck)
-  deal_player(dck, 2)
-  deal_dealer(dck, 2)
-end
-
-def deal_player(hand, dck, cards=1)
+def deal(hand, dck, cards=1)
   # select random cards
   cards.times do
     card = dck.sample
@@ -56,91 +57,139 @@ end
 
 def hand_value(hand)
   hand_total = 0
+  ace_count = 0
   hand.each do |val|
-    if val == "Ace" # => Fix this logic
-      hand_total += 11
-    else
-      hand_total += CARD_VALUES[val][0].to_i
-    end
+    hand_total += CARD_VALUES[val][0].to_i
+    ace_count += 1 if val == "Ace"
+  end
+  if hand_total > PLAYING_TO_NUMBER && hand.include?("Ace")
+    hand_total -= (10 * ace_count)
   end
   hand_total
 end
 
 def hit(hand, dck)
-  deal_player(hand, dck)
-end
-
-hand = deal_player([], deck, 2)
-
-# # Player Turn
-# loop do
-#   prompt "Your hand is #{hand}"
-#   prompt "Would you like to hit or stay?"
-#   answer = gets.chomp
-#   break if answer == "stay" || bust?(hand_value(hand))
-
-#   hit(hand, deck)
-# end
-
-# if bust?(hand_value(hand))
-#   prompt "You busted!!"
-# else
-#   puts "You stayed"
-# end
-
-# Dealer Turn
-loop do 
-  prompt "Dealer turn"
-  p hand
-  break if hand_value(hand) > 17 || bust?(hand_value(hand))
-  hit(hand, deck)
-end
-
-if bust?(hand_value(hand))
-  prompt "Dealer busted!!"
-else
-  puts "Dealer stayed"
+  deal(hand, dck)
 end
 
 def determine_winner(player_hand, dealer_hand)
-  return "player" if player_hard > dealer_hand
-  return "dealer" if dealer_hand > player_hand
+  player_total = hand_value(player_hand)
+  dealer_total = hand_value(dealer_hand)
+
+  # Check if either busted
+  return "dealer" if bust?(player_total)
+  return "player" if bust?(dealer_total)
+
+  winner = if player_total > dealer_total
+             "player"
+           elsif player_total < dealer_total
+             "dealer"
+           else
+             "tie"
+           end
+  winner
 end
 
 def display_winner(winner)
-  puts "#{winner.capitalize} won!"
+  if winner == "tie"
+    prompt "#{winner.capitalize} won!"
+    winner.capitalize
+  else
+    prompt "It's a tie!"
+    "tie"
+  end
 end
 
-display_winner(determine_winner(player_hand, dealer_hand))
-
-
-
-# Show the cards
-# Dealer has N and unknown card
-# You have: Jack and 6
-def display_hand(player_hand, dealer_hand)
-  puts "Dealer has: #{dealer_hand-1} and unknown"
-  puts "You have: #{player_hand}"
+def display_both(player_hand, dealer_hand)
+  puts "=============="
+  prompt "Dealer hand:#{joinor(dealer_hand)}, total: #{hand_value(dealer_hand)}"
+  prompt "Player hand:#{joinor(player_hand)}, total: #{hand_value(player_hand)}"
+  puts "=============="
 end
 
+def joinor(array)
+  arr = array.dup
+  if arr.length == 2
+    arr.join(" and ")
+  else
+    arr[-1] = "and #{arr.last}"
+    arr.join(", ")
+  end
+end
 
-# Set the value of the hands 
+def play_again?
+  puts "-------------"
+  prompt "Would you like to play again?"
+  answer = gets.chomp
+  answer.downcase.start_with?('y')
+end
 
-# Player Turn
+# Main Game Loop
+loop do
+  score = { player: 0, dealer: 0 }
+  loop do
+    break if score.value?(5)
+    system 'clear'
+    deck = initialize_deck
 
+    # Initialize the hands
+    player_hand = deal([], deck, 2)
+    dealer_hand = deal([], deck, 2)
 
+    prompt "Player: #{score[:player]} || Dealer: #{score[:dealer]}"
 
-# Dealer Turn
-# loop do
-# Check value. break if bust?(value)
-# if < 17, hit. else, stay. 
-# end
+    # # Player Turn
+    loop do
+      prompt "Dealer has: #{display_hand(dealer_hand, false)}"
+      prompt "You have #{display_hand(player_hand)}"
+      prompt "Would you like to hit or stay?"
+      answer = gets.chomp
+      break if answer == "stay"
 
+      hit(player_hand, deck)
+      system 'clear'
+      break if bust?(hand_value(player_hand))
+    end
 
-# Compare Values
-# def determine_winner(player_hand, dealer_hand)
-# return "player" if player_hard > dealer_hand
-# return "dealer" if dealer_hand > player_hand
+    if bust?(hand_value(player_hand))
+      prompt "You drew a #{player_hand.last} and busted!!"
+      score[:dealer] += 1
+      display_both(player_hand, dealer_hand)
+      sleep(3)
+      next
+    else
+      prompt "You stayed"
+    end
 
-# Display winner
+    # Dealer Turn
+    loop do
+      prompt "Dealer has: #{display_hand(dealer_hand)}"
+      dealer_value = hand_value(dealer_hand)
+      break if dealer_value > DEALER_HITS || bust?(dealer_value)
 
+      hit(dealer_hand, deck)
+    end
+
+    if bust?(hand_value(dealer_hand))
+      prompt "Dealer busted!!"
+      score[:player] += 1
+      display_both(player_hand, dealer_hand)
+      sleep(3)
+      next
+    else
+      prompt "Dealer stayed"
+    end
+
+    display_both(player_hand, dealer_hand)
+
+    winner = determine_winner(player_hand, dealer_hand)
+    score[winner.to_sym] += 1 unless winner == "tie"
+    display_winner(winner)
+
+    sleep(3)
+
+    system 'clear'
+  end
+  play_again? ? next : break
+end
+prompt "Thanks for playing Twenty-One! Bye!"
