@@ -1,12 +1,3 @@
-# array = [1,2,3,4,5]
-# dub = array.clone
-# empty_arr = []
-
-# array.map.with_index do |element, index|
-#   empty_arr << dub.pop
-# end
-
-# p empty_arr
 
 
 def reverse(array)
@@ -17,6 +8,8 @@ def reverse(array)
   end
   empty_arr
 end
+
+
 
 p reverse([1,2,3,4]) == [4,3,2,1]          # => true
 p reverse(%w(a b e d c)) == %w(c d e b a)  # => true
