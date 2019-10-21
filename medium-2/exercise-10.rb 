@@ -1,0 +1,11 @@
+sum sq sq sum
+
+method that ocmputer the difference between the square of the sum of the first n positive integers and the sum of the quares
+
+input: integer
+output: integer
+
+(1..n).sum
+1.
+
+fdsaf
